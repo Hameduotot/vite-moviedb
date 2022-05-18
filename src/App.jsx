@@ -42,10 +42,10 @@ function App() {
           style={{ padding: 24, minHeight: 380 }}
         >
           <Switch>
-            <Route path="/about">
+            <Route exact path="/about">
               <About />
             </Route>
-            <Route path="/login">
+            <Route exact path="/login">
               <Login />
             </Route>
             <Route path="/">
