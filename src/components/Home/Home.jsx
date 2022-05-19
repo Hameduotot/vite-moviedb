@@ -1,34 +1,27 @@
 import { Col, Row, Card, Pagination } from "antd";
 import React, { useEffect, useState } from "react";
+import useFech from "../../hooks/useFech";
 
 const { Meta } = Card;
 function Home() {
-  const [latestMovie, setLatestMovie] = useState([]);
+  const {
+    data: latestMovie,
+    loading,
+    reFech,
+  } = useFech({
+    url: `https://api.themoviedb.org/3/movie/now_playing`,
+    query: {
+      api_key: "b97ee4b164b607d5e4e00130b6fb4e67",
+      language: "en-US",
+      page: 1,
+    },
+  });
   console.log(latestMovie);
   const { results = [], page, total_pages, total_results } = latestMovie;
 
   function onChange(page, pageSize) {
     getMovieData(page);
   }
-  function itemRender(current, type, originalElement) {
-    if (type === "prev") {
-      return <a>Previous</a>;
-    }
-    if (type === "next") {
-      return <a>Next</a>;
-    }
-    return originalElement;
-  }
-  function getMovieData(currentPage) {
-    fetch(
-      `https://api.themoviedb.org/3/movie/now_playing?api_key=b97ee4b164b607d5e4e00130b6fb4e67&language=en-US&page=${currentPage}`
-    )
-      .then((data) => data.json())
-      .then(setLatestMovie);
-  }
-  useEffect(() => {
-    getMovieData(1);
-  }, []);
 
   return (
     <>
@@ -53,9 +46,8 @@ function Home() {
       <Row>
         <Col>
           <Pagination
-            onChange={onChange}
+            onChange={(page) => reFech({ page })}
             total={690}
-            itemRender={itemRender}
             showSizeChanger
           />
         </Col>
